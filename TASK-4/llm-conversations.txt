@@ -1,0 +1,68 @@
+-Üniversite ders kayıt sistemi hakkında dot kodu oluşturur musun?
+tabii 👍 aşağıda Görev 4 – Üniversite Ders Kayıt Sistemi için sade, öğrenci seviyesinde hazırlanmış dot kodu (flowchart.txt) var.
+bunu bir .txt ya da .dot dosyasına kaydedip terminalde
+dot -Tpng flowchart.txt -o flowchart.png
+yazarak flowchart.png olarak çıkarabilirsin.
+
+digraph DersKayitSistemi {
+    rankdir=TB;
+    node [shape=box, style=rounded, fontname="Helvetica"];
+
+    Basla [label="BAŞLA", shape=ellipse];
+    Giris [label="Öğrenci numarası ve şifre al"];
+    Kontrol [label="Bilgiler doğru mu?", shape=diamond];
+    Hata [label="Hatalı giriş - Bitir"];
+    Menu [label="Menüyü göster:\n1-Ders Seç\n2-Dersleri Görüntüle\n3-Ders Sil\n4-Çıkış"];
+    Secim [label="Kullanıcıdan seçim al", shape=parallelogram];
+
+    DersSec [label="Ders Seç Bölümü"];
+    Kontenjan [label="Kontenjan var mı?", shape=diamond];
+    Ekle [label="Ders eklendi"];
+    Dolu [label="Ders dolu"];
+
+    Goruntule [label="Dersleri Görüntüle Bölümü"];
+    DersiVarMi [label="Ders var mı?", shape=diamond];
+    Listele [label="Dersleri listele"];
+    Yok [label="Henüz ders seçilmemiş"];
+
+    Silme [label="Ders Silme Bölümü"];
+    DersiVarMi2 [label="Ders var mı?", shape=diamond];
+    Sil [label="Ders silindi"];
+    SilYok [label="Silinecek ders yok"];
+
+    Cikis [label="Sistemden çıkılıyor"];
+    Bitir [label="BİTİR", shape=ellipse];
+
+    // Bağlantılar
+    Basla -> Giris -> Kontrol;
+    Kontrol -> Menu [label="Evet"];
+    Kontrol -> Hata [label="Hayır"];
+    Hata -> Bitir;
+
+    Menu -> Secim;
+
+    Secim -> DersSec [label="1"];
+    Secim -> Goruntule [label="2"];
+    Secim -> Silme [label="3"];
+    Secim -> Cikis [label="4"];
+
+    DersSec -> Kontenjan;
+    Kontenjan -> Ekle [label="Evet"];
+    Kontenjan -> Dolu [label="Hayır"];
+    Ekle -> Menu;
+    Dolu -> Menu;
+
+    Goruntule -> DersiVarMi;
+    DersiVarMi -> Listele [label="Evet"];
+    DersiVarMi -> Yok [label="Hayır"];
+    Listele -> Menu;
+    Yok -> Menu;
+
+    Silme -> DersiVarMi2;
+    DersiVarMi2 -> Sil [label="Evet"];
+    DersiVarMi2 -> SilYok [label="Hayır"];
+    Sil -> Menu;
+    SilYok -> Menu;
+
+    Cikis -> Bitir;
+}
