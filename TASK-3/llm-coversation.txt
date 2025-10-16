@@ -1,0 +1,82 @@
+-hastane randevu sistemi dot kodunu oluşturur musun?
+Tabii 👍
+Aşağıda GöREV 3 – Hastane Randevu Sistemi için ödevde istenen şekilde hazırlanmış Graphviz DOT kodu (flowchart.dot) yer alıyor.
+Bu dosyayı bir .txt veya .dot dosyasına kaydedip dot -Tpng flowchart.dot -o flowchart.png komutu ile .png haline getirebilirsin.
+
+digraph HASTANE_RANDEVU_SISTEMI {
+    rankdir=TB;
+    node [shape=box, style="rounded,filled", fontname="Helvetica"];
+    edge [fontname="Helvetica", fontsize=10];
+    bgcolor="white";
+
+    // --- ANA DÜĞÜMLER ---
+    Start [label="BAŞLA", shape=ellipse, fillcolor=lightblue];
+    End [label="BİTİR", shape=ellipse, fillcolor=lightcoral];
+    Menu [label="ANA MENÜYÜ GÖSTER:\n1-Randevu Al\n2-Randevuları Görüntüle\n3-Randevu İptal Et\n4-Çıkış", fillcolor=lightyellow];
+    Secim [label="OKU: Kullanıcı Seçimi", shape=parallelogram];
+    
+    // --- RANDEVU ALME BÖLÜMÜ ---
+    subgraph cluster_randevu_al {
+        label="1. Randevu Alma";
+        bgcolor="#e6f2ff";
+
+        TcSor [label="OKU: T.C. Kimlik No", shape=parallelogram];
+        KayitKontrol [label="Hasta Kayıtlı mı?", shape=diamond, fillcolor=khaki];
+        YeniKayit [label="YENİ KAYIT OLUŞTUR\n(İsim, Yaş, Telefon, E-posta)", fillcolor=lightgreen];
+        BranşSec [label="BRANŞ SEÇ (Dahiliye, Göz, Kardiyoloji...)", fillcolor=lightyellow];
+        DoktorSec [label="DOKTOR SEÇ", fillcolor=lightyellow];
+        SaatSec [label="Randevu Saati Seç", fillcolor=lightyellow];
+        Onay [label="RANDEVU OLUŞTUR\n'Başarıyla Kaydedildi'", fillcolor=lightgreen];
+    }
+
+    // --- RANDEVU GÖRÜNTÜLEME BÖLÜMÜ ---
+    subgraph cluster_randevu_gor {
+        label="2. Randevuları Görüntüle";
+        bgcolor="#f0f0f0";
+
+        TcSorGor [label="OKU: T.C. Kimlik No", shape=parallelogram];
+        Listele [label="Kayıtlı Randevuları Listele", fillcolor=lightyellow];
+        BosKontrol [label="Hiç Randevu Var mı?", shape=diamond, fillcolor=khaki];
+        BosMesaj [label="'Randevunuz Yok' Mesajı Göster", shape=parallelogram, fillcolor=lightyellow];
+    }
+
+    // --- RANDEVU İPTAL BÖLÜMÜ ---
+    subgraph cluster_randevu_iptal {
+        label="3. Randevu İptal Et";
+        bgcolor="#fff5e6";
+
+        TcSorIptal [label="OKU: T.C. Kimlik No", shape=parallelogram];
+        ListeleIptal [label="Randevuları Listele", fillcolor=lightyellow];
+        SecIptal [label="İptal Edilecek Randevuyu Seç", fillcolor=lightyellow];
+        Sil [label="Randevuyu Sil", fillcolor=lightgreen];
+        MesajIptal [label="'Randevu İptal Edildi' Mesajı Göster", shape=parallelogram, fillcolor=lightyellow];
+    }
+
+    // --- ANA AKIŞ ---
+    Start -> Menu -> Secim;
+    
+    // Menü bağlantıları
+    Secim -> TcSor [label="1: Randevu Al"];
+    Secim -> TcSorGor [label="2: Görüntüle"];
+    Secim -> TcSorIptal [label="3: İptal Et"];
+    Secim -> End [label="4: Çıkış"];
+
+    // --- Randevu Alma Akışı ---
+    TcSor -> KayitKontrol;
+    KayitKontrol -> YeniKayit [label="Hayır"];
+    KayitKontrol -> BranşSec [label="Evet"];
+    YeniKayit -> BranşSec;
+    BranşSec -> DoktorSec -> SaatSec -> Onay -> Menu;
+
+    // --- Görüntüleme Akışı ---
+    TcSorGor -> Listele -> BosKontrol;
+    BosKontrol -> BosMesaj [label="Hayır"];
+    BosKontrol -> Menu [label="Evet"];
+    BosMesaj -> Menu;
+
+    // --- İptal Akışı ---
+    TcSorIptal -> ListeleIptal -> SecIptal -> Sil -> MesajIptal -> Menu;
+
+    // --- ÇIKIŞ ---
+    End [shape=ellipse, fillcolor=lightcoral];
+}
