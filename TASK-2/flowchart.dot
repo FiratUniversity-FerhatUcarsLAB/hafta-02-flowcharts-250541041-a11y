@@ -1,0 +1,75 @@
+digraph Online_Sepet {
+    // --- Genel Ayarlar ---
+    rankdir=TB;
+    splines=ortho;
+    node [shape=box, style="rounded,filled", fontname="Helvetica"];
+    edge [fontname="Helvetica", fontsize=10];
+
+    // --- Başlangıç ve Bitiş ---
+    Start [label="BAŞLA", shape=ellipse, fillcolor=lightblue];
+    End [label="BİTİR\nAlışveriş Tamamlandı", shape=ellipse, fillcolor=lightcoral];
+
+    // --- Giriş ve Hazırlık ---
+    ShowProducts [label="Ürün listesini göster", fillcolor=lightyellow];
+    CreateCart [label="Boş sepet oluştur", fillcolor=lightyellow];
+    CheckLogin [label="Kullanıcı giriş yaptı mı?", shape=diamond, fillcolor=khaki];
+
+    Start -> ShowProducts -> CreateCart -> CheckLogin;
+
+    // --- Giriş Süreci ---
+    LoginPrompt [label="Giriş bilgilerini al", fillcolor=lightyellow];
+    CheckLoginValid [label="Bilgiler doğru mu?", shape=diamond, fillcolor=khaki];
+    LoginFail [label="Hatalı giriş!\nTekrar dene", fillcolor=orange];
+    LoginSuccess [label="Giriş başarılı", fillcolor=lightgreen];
+
+    CheckLogin -> LoginPrompt [label="Hayır"];
+    LoginPrompt -> CheckLoginValid;
+    CheckLoginValid -> LoginSuccess [label="Evet"];
+    CheckLoginValid -> LoginFail [label="Hayır"];
+    LoginFail -> CheckLogin;
+    CheckLogin -> Menu [label="Evet"];
+    LoginSuccess -> Menu;
+
+    // --- Ana Menü ---
+    Menu [label="Menü:\n1-Ürün Ekle\n2-Sepeti Görüntüle\n3-Ürün Sil\n4-Alışverişi Tamamla\n5-Çıkış Yap", fillcolor=lightgreen];
+    Menu -> Choice;
+
+    Choice [label="Kullanıcı seçimi", shape=diamond, fillcolor=khaki];
+
+    // --- Ürün Ekleme ---
+    Choice -> AddItem [label="1"];
+    AddItem [label="Ürün kodunu iste\nSepete ekle", fillcolor=lightyellow];
+    AddItemDone [label="Ürün sepete eklendi", fillcolor=lightgreen];
+    AddItem -> AddItemDone -> Menu;
+
+    // --- Sepeti Görüntüleme ---
+    Choice -> ViewCart [label="2"];
+    ViewCart [label="Sepetteki ürünleri göster\nToplam fiyatı hesapla", fillcolor=lightyellow];
+    ViewCart -> Menu;
+
+    // --- Ürün Silme ---
+    Choice -> RemoveItem [label="3"];
+    RemoveItem [label="Sepeti göster\nSilinecek ürünü iste", fillcolor=lightyellow];
+    RemoveItemDone [label="Ürün silindi", fillcolor=lightgreen];
+    RemoveItem -> RemoveItemDone -> Menu;
+
+    // --- Alışverişi Tamamlama ---
+    Choice -> Checkout [label="4"];
+    CartEmptyCheck [label="Sepet boş mu?", shape=diamond, fillcolor=khaki];
+    Checkout -> CartEmptyCheck;
+
+    CartEmptyCheck -> EmptyMsg [label="Evet"];
+    EmptyMsg [label="Sepet boş! İşlem iptal", fillcolor=orange];
+    EmptyMsg -> Menu;
+
+    CartEmptyCheck -> Address [label="Hayır"];
+    Address [label="Adres bilgilerini al", fillcolor=lightyellow];
+    Payment [label="Ödeme yöntemini seç", fillcolor=lightyellow];
+    Complete [label="Ödeme başarılı\nSipariş oluşturuldu", fillcolor=lightgreen];
+    Address -> Payment -> Complete -> End;
+
+    // --- Çıkış ---
+    Choice -> Exit [label="5"];
+    Exit [label="Sistemden çıkılıyor...", fillcolor=lightblue];
+    Exit -> End;
+}
