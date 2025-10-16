@@ -1,4 +1,4 @@
-İsim - Soy isim 
+İsim - Soy isim Emire Şeker
 Öğrenci No:250541041
 
 sistemin kısa açıklaması (maks. 5-6 satır)
