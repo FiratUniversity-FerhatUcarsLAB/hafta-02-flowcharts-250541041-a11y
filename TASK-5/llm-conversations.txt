@@ -1,0 +1,56 @@
+-Akıllı ev güvenlik sistemi için örnek dot kodu oluştur
+tamam 👍 aşağıda Görev 5 – Akıllı Ev Güvenlik Sistemi için sade ve anlaşılır şekilde hazırlanmış dot kodu (flowchart.txt) var.
+bunu bir .txt ya da .dot dosyasına kaydedip şu komutla png yapabilirsin:
+dot -Tpng flowchart.txt -o flowchart.png
+
+digraph AkilliEvGuvenlik {
+    rankdir=TB;
+    node [shape=box, style=rounded, fontname="Helvetica"];
+
+    Basla [label="BAŞLA", shape=ellipse];
+    SistemBaslat [label="Sistemi başlat"];
+    SensorKontrol [label="Sensörleri kontrol et\n(kapı, pencere, hareket, duman)"];
+    SensorDurum [label="Tüm sensörler çalışıyor mu?", shape=diamond];
+    Hata [label="Hata: sensör bağlantısı yok"];
+    SistemAktif [label="Akıllı ev güvenlik sistemi aktif"];
+
+    KapıPencere [label="Kapı veya pencere açıldı mı?", shape=diamond];
+    Alarm [label="Alarmı çalıştır"];
+    Bildirim [label="Kullanıcıya bildirim gönder"];
+
+    Hareket [label="Hareket algılandı mı?", shape=diamond];
+    Kamera [label="Kamerayı aktif et"];
+    Kayit [label="Görüntüyü kaydet"];
+    Uyari [label="Kullanıcıya uyarı gönder"];
+
+    Duman [label="Duman algılandı mı?", shape=diamond];
+    Yangin [label="Yangın alarmını çal"];
+    Itfaiye [label="Kullanıcıya ve itfaiyeye bildir"];
+
+    KullaniciKapat [label="Kullanıcı sistemi kapattı mı?", shape=diamond];
+    Kapat [label="Sistemi kapat ve sensörleri devre dışı bırak"];
+    Bitir [label="BİTİR", shape=ellipse];
+
+    // bağlantılar
+    Basla -> SistemBaslat -> SensorKontrol -> SensorDurum;
+    SensorDurum -> SistemAktif [label="Evet"];
+    SensorDurum -> Hata [label="Hayır"];
+    Hata -> Bitir;
+
+    SistemAktif -> KapıPencere;
+    KapıPencere -> Alarm [label="Evet"];
+    Alarm -> Bildirim -> KapıPencere [label="Devam"];
+
+    KapıPencere -> Hareket;
+    Hareket -> Kamera [label="Evet"];
+    Kamera -> Kayit -> Uyari -> Hareket [label="Devam"];
+
+    Hareket -> Duman;
+    Duman -> Yangin [label="Evet"];
+    Yangin -> Itfaiye -> Duman [label="Devam"];
+
+    Duman -> KullaniciKapat;
+    KullaniciKapat -> Kapat [label="Evet"];
+    Kapat -> Bitir;
+    KullaniciKapat -> KapıPencere [label="Hayır"];
+}
